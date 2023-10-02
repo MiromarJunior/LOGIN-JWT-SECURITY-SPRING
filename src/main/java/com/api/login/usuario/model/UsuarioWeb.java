@@ -1,10 +1,13 @@
 package com.api.login.usuario.model;
+
 import java.util.Collection;
 import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,7 +24,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class UsuarioWeb  implements UserDetails{
+public class UsuarioWeb implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,21 +36,23 @@ public class UsuarioWeb  implements UserDetails{
     @Column(name = "USWE_USUARIO")
     private String usuario;
 
+    @JsonIgnore
     @Column(name = "USWE_SENHA")
     private String senhaUsuario;
 
     @Column(name = "USWE_ADM")
     private String usuarioAdm;
 
-    
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-      
-        if(getUsuarioAdm().equals("Sim"))return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
-        else return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+
+        if (getUsuarioAdm().equals("Sim"))
+            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+        else
+            return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
+    @JsonIgnore
     @Override
     public String getPassword() {
         return getSenhaUsuario();
@@ -55,12 +60,12 @@ public class UsuarioWeb  implements UserDetails{
 
     @Override
     public String getUsername() {
-       return getUsuario();
+        return getUsuario();
     }
 
     @Override
     public boolean isAccountNonExpired() {
-      return true;
+        return true;
     }
 
     @Override
@@ -78,7 +83,4 @@ public class UsuarioWeb  implements UserDetails{
         return true;
     }
 
-
-
-    
 }

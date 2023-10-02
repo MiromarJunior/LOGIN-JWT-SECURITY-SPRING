@@ -9,6 +9,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
+
 @RestControllerAdvice
 public class ErrorHandling {
 
@@ -31,6 +34,19 @@ public class ErrorHandling {
         public DadosErros(FieldError erro) {
             this(erro.getField(), erro.getDefaultMessage());
         }
+    }
+
+        @ExceptionHandler(JWTVerificationException.class)
+        public ResponseEntity<?> tratarErroTokenExpire() {
+        return new ResponseEntity<>(new TokenExpiredDTO("Token Expirado Favor efetuar um novo login!"),HttpStatus.UNAUTHORIZED);
+
+    }
+
+
+    @ExceptionHandler(TokenExpiredException.class)
+    public ResponseEntity<String> handleTokenExpiredException(TokenExpiredException ex) {
+        String errorMessage = "O Token expirou em " + ex.getExpiredOn() + ".";
+        return new ResponseEntity<>(errorMessage, HttpStatus.UNAUTHORIZED);
     }
 
 }
