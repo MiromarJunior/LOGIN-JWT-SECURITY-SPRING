@@ -1,9 +1,13 @@
 package com.api.login.tratamentoexception;
 
+import java.io.IOException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -11,9 +15,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestControllerAdvice
-public class ErrorHandling {
+public class ErrorHandling  implements AuthenticationEntryPoint {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> tratarErroValidacao(MethodArgumentNotValidException ex) {
@@ -43,10 +52,23 @@ public class ErrorHandling {
     }
 
 
-    @ExceptionHandler(TokenExpiredException.class)
+    @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleTokenExpiredException(TokenExpiredException ex) {
         String errorMessage = "O Token expirou em " + ex.getExpiredOn() + ".";
         return new ResponseEntity<>(errorMessage, HttpStatus.UNAUTHORIZED);
+    }
+
+
+    @Override
+    public void commence(HttpServletRequest request, HttpServletResponse response,
+            AuthenticationException authException) throws IOException, ServletException {
+        // TODO Auto-generated method stub
+        response.setContentType("application/json;charset=UTF-8");
+     response.setStatus(403);
+
+     ObjectMapper mapper = new ObjectMapper();
+     response.getWriter().write(mapper.writeValueAsString(new LoginInvalidoDTO("Acesso Não Autorizado"))
+     );
     }
 
 }

@@ -14,6 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.api.login.tratamentoexception.ErrorHandling;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
@@ -30,6 +32,8 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST, "/login").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(exceptionHandling->exceptionHandling.authenticationEntryPoint(new ErrorHandling()))
+                
                 .build();
 
     }
