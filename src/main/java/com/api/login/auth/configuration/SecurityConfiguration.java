@@ -32,8 +32,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST, "/login").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(exceptionHandling->exceptionHandling.authenticationEntryPoint(new ErrorHandling()))
-                
+                .exceptionHandling(exceptionHandling->exceptionHandling.authenticationEntryPoint(new ErrorHandling()))                
                 .build();
 
     }

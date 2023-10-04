@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import com.api.login.auth.service.TokenService;
 import com.api.login.usuario.repository.UsuarioRepository;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -40,10 +41,8 @@ public class SecurityFilter extends OncePerRequestFilter {
     }
 
     private String recoverToken(HttpServletRequest request){
-        var authHeader = request.getHeader("Authorization");
-       
-        if(authHeader == null)return null;
-       
+        var authHeader = request.getHeader("Authorization");       
+        if(authHeader == null)throw new JWTVerificationException("Token não encontrado!");       
         return authHeader.replace("Bearer ", "");
     }
     

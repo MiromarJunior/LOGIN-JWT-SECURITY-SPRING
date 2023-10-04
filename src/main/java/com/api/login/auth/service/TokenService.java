@@ -47,8 +47,6 @@ public class TokenService {
             .build()
             .verify(token)
             .getSubject();
-
-
         
         } catch (JWTVerificationException e) {
            throw new RuntimeException("Erro ao Validar Token"+e);

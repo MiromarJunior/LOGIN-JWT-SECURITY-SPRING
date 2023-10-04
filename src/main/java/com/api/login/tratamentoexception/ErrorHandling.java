@@ -62,7 +62,7 @@ public class ErrorHandling  implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException authException) throws IOException, ServletException {
-        // TODO Auto-generated method stub
+  
         response.setContentType("application/json;charset=UTF-8");
      response.setStatus(403);
 
