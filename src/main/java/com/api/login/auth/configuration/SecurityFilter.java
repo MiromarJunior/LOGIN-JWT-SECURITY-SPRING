@@ -42,7 +42,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     private String recoverToken(HttpServletRequest request){
         var authHeader = request.getHeader("Authorization");       
-        if(authHeader == null)throw new JWTVerificationException("Token não encontrado!");       
+        if(authHeader == null) return null;// throw new JWTVerificationException("Token não encontrado!");       
         return authHeader.replace("Bearer ", "");
     }
     

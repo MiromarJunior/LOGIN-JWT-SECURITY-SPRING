@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import com.api.login.usuario.model.UsuarioWeb;
+import com.api.login.usuario.model.dto.UsuarioCreateDTO;
 import com.api.login.usuario.model.dto.UsuarioGetDTO;
 import com.api.login.usuario.service.UsuarioService;
 
@@ -26,11 +27,10 @@ public class UsuarioController {
 
 
     @PostMapping
-    public ResponseEntity<UsuarioWeb> saveUsu(@RequestBody UsuarioWeb usuarioWeb){    
+    public ResponseEntity<UsuarioWeb> saveUsu(@RequestBody UsuarioCreateDTO dto){    
       
-      String encryptString = new BCryptPasswordEncoder().encode(usuarioWeb.getSenhaUsuario());
-      usuarioWeb.setSenhaUsuario(encryptString);
-      UsuarioWeb usu = service.saveUser(usuarioWeb);
+
+      UsuarioWeb usu = service.createUser(dto);
       return ResponseEntity.ok().body(usu)  ;
 
     }

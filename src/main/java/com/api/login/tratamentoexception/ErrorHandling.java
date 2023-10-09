@@ -2,6 +2,7 @@ package com.api.login.tratamentoexception;
 
 import java.io.IOException;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -12,6 +13,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.annotation.ResponseStatusExceptionResolver;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
@@ -70,5 +73,19 @@ public class ErrorHandling  implements AuthenticationEntryPoint {
      response.getWriter().write(mapper.writeValueAsString(new LoginInvalidoDTO("Acesso Não Autorizado"))
      );
     }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<MensagemErroDTO> handleResponseStatusException(ResponseStatusException ex) {
+        // Aqui você pode personalizar a mensagem de erro conforme necessário
+        String mensagemDeErro = ex.getMessage();
+        
+        // Você pode também obter o código de status HTTP da exceção
+         int codigoDeStatus = ex.getStatusCode().value();
+        
+        // Crie uma resposta ResponseEntity com a mensagem de erro e o código de status HTTP
+        return ResponseEntity.status(codigoDeStatus).body(new MensagemErroDTO(mensagemDeErro));
+    }
+
+    
 
 }
